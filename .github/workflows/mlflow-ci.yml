@@ -2,7 +2,7 @@ name: CI/CD para ML con MLflow
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   ml_pipeline:
