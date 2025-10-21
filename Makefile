@@ -3,3 +3,5 @@ train:
 	python train.py 
 validate:
 	python validate.py
+pathModelo:
+	python download_mlflow_mode.py
