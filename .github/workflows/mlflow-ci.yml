@@ -29,9 +29,29 @@ jobs:
       - name: ✅ Validar desempeño del modelo
         run: make validate
 
+      #Desde aca se modifica para guardar en git el artefacto
+      - name: 🔍 Obtener ID de la ejecución
+        id: get_run_id
+        run: echo "RUN_ID=$(cat mlflow_run_id.txt)" >> $GITHUB_OUTPUT
+
+      - name: 📥 Descargar modelo de MLFlow (temporalmente)
+        # Este script usa el RUN_ID para obtener el artefacto
+        run: python src/download_mlflow_model.py
+        env:
+          MLFLOW_RUN_ID: ${{ steps.get_run_id.outputs.RUN_ID }}
+          # Asegúrate de configurar también MLFLOW_TRACKING_URI si es remoto
+
       - name: 📤 Subir modelo como artefacto (si pasa validación)
         if: success()
         uses: actions/upload-artifact@v4
         with:
-           name: modelo-validado
-           path: model.pkl
+          name: modelo-validado
+          # Apunta a la carpeta temporal donde 'download_mlflow_model.py' lo guardó
+          path: ./temp_model_artifact/
+
+      #- name: 📤 Subir modelo como artefacto (si pasa validación)
+      #    f: success()
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #     name: modelo-validado
+      #     path: model.pkl

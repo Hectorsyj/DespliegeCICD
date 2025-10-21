@@ -52,7 +52,7 @@ try:
     modelsk = mlflow.sklearn.load_model(model_uri) 
     
     print("✅ Modelo cargado correctamente.")
-
+#_____________________________________________________ hasta aca se asegura la ruta del modelo
 #print(f"--- Debug: Intentando cargar modelo desde: {model_path} ---")
 #try:
 #    model = joblib.load(model_path)
