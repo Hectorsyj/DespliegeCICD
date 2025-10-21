@@ -2,7 +2,7 @@ name: CI/CD para ML con MLflow
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   ml_pipeline:
@@ -26,12 +26,12 @@ jobs:
       - name: 🧪 Entrenar modelo
         run: make train
 
-      # - name: ✅ Validar desempeño del modelo
-      #   run: make validate
+       - name: ✅ Validar desempeño del modelo
+         run: make validate
 
-      # - name: 📤 Subir modelo como artefacto (si pasa validación)
-      #   if: success()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: modelo-validado
-      #     path: model.pkl
+       - name: 📤 Subir modelo como artefacto (si pasa validación)
+         if: success()
+         uses: actions/upload-artifact@v4
+         with:
+           name: modelo-validado
+           path: model.pkl
