@@ -3,7 +3,7 @@ import mlflow
 import os
 import shutil
 
-RUN_ID = os.environ.get("MLFLOW_RUN_ID")
+RUN_IDenv = os.environ.get("MLFLOW_RUN_ID")
 TEMP_DOWNLOAD_PATH = "./temp_model_artifact" # Debe coincidir con el 'path' del YAML
 
 if not RUN_ID:
@@ -16,9 +16,16 @@ mlruns_dir = os.path.join(os.getcwd(), "mlruns")
 tracking_uri = "file://" + os.path.abspath(mlruns_dir)
 mlflow.set_tracking_uri(tracking_uri)
 
+try:
+    with open("mlflow_run_id.txt", "r") as f:
+        run_id = f.read().strip()
+except FileNotFoundError:
+    print("Error: No se encontró 'mlflow_run_id.txt'. El entrenamiento falló o no guardó el ID.")
+    exit(1)
+
 # 2. Definir la URI de la fuente del modelo en MLFlow
-# 'model' es el artifact_path que usaste en log_model
-model_source_uri = f"runs:/{RUN_ID}/model" 
+# 'model' es el artifact_path que usaste en log_model rev
+model_source_uri = f"runs:/{run_id}/model" 
 print(f"Descargando modelo de: {model_source_uri} a {TEMP_DOWNLOAD_PATH}")
 
 # 3. Descargar el artefacto
