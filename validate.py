@@ -5,6 +5,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_diabetes  # Importar load_diabetes
 import sys
+import mlflow
 import os
 
 # Parámetro de umbral
@@ -24,12 +25,39 @@ print(f"--- Debug: Dimensiones de X_test: {X_test.shape} ---")  # Debería ser (
 # --- Cargar modelo previamente entrenado ---
 model_filename = "model.pkl"
 model_path = os.path.abspath(os.path.join(os.getcwd(), model_filename))
-print(f"--- Debug: Intentando cargar modelo desde: {model_path} ---")
+
+#________________________________________________________________
+# 1. Configurar MLFlow Tracking (debe apuntar al mismo lugar que el entrenamiento)
+# Esto es crucial para que pueda encontrar el run ID
+mlruns_dir = os.path.join(os.getcwd(), "mlruns")
+tracking_uri = "file://" + os.path.abspath(mlruns_dir)
+mlflow.set_tracking_uri(tracking_uri)
+
+# 2. Obtener el Run ID del archivo generado por 'train.py'
+try:
+    with open("mlflow_run_id.txt", "r") as f:
+        run_id = f.read().strip()
+except FileNotFoundError:
+    print("Error: No se encontró 'mlflow_run_id.txt'. El entrenamiento falló o no guardó el ID.")
+    exit(1)
+
+# 3. Construir la URI de carga y Cargar el modelo
+# 'model' es el artifact_path que usaste en log_model (artifact_path="model")
+model_uri = f"runs:/{run_id}/model"
+
+print(f"--- Debug: Cargando modelo desde URI: {model_uri} ---")
 
 try:
-    model = joblib.load(model_path)
+    # ⚠️ Esta es la línea que reemplaza tu lógica de os.path ⚠️
+    modelsk = mlflow.sklearn.load_model(model_uri) 
+    
+    print("✅ Modelo cargado correctamente.")
+
+#print(f"--- Debug: Intentando cargar modelo desde: {model_path} ---")
+#try:
+#    model = joblib.load(model_path)
 except FileNotFoundError:
-    print(f"--- ERROR: No se encontró el archivo del modelo en '{model_path}'. Asegúrate de que el paso 'make train' lo haya guardado correctamente en la raíz del proyecto. ---")
+    print(f"--- ERROR: No se encontró el archivo del modelo en '{model_uri}'. Asegúrate de que el paso 'make train' lo haya guardado correctamente en la raíz del proyecto. ---")
     # Listar archivos en el directorio actual para depuración
     print(f"--- Debug: Archivos en {os.getcwd()}: ---")
     try:
@@ -42,11 +70,11 @@ except FileNotFoundError:
 # --- Predicción y Validación ---
 print("--- Debug: Realizando predicciones ---")
 try:
-    y_pred = model.predict(X_test)  # Ahora X_test tiene 10 features
+    y_pred = modelsk.predict(X_test)  # Ahora X_test tiene 10 features
 except ValueError as pred_err:
     print(f"--- ERROR durante la predicción: {pred_err} ---")
     # Imprimir información de características si el error persiste
-    print(f"Modelo esperaba {model.n_features_in_} features.")
+    print(f"Modelo esperaba {modelsk.n_features_in_} features.")
     print(f"X_test tiene {X_test.shape[1]} features.")
     sys.exit(1)
 

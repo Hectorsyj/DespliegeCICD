@@ -78,7 +78,7 @@ mse = mean_squared_error(y_test, preds)
 print(f"--- Debug: Iniciando run de MLflow en Experimento ID: {experiment_id} ---") # Añadir ID aquí
 run = None
 try:
-    # Iniciar el run PASANDO EXPLÍCITAMENTE el experiment_id
+    # Iniciar el run PASANDO EXPLÍCITAMENTE el experiment_id+
     with mlflow.start_run(experiment_id=experiment_id) as run: # <--- CAMBIO CLAVE
         run_id = run.info.run_id
         actual_artifact_uri = run.info.artifact_uri
@@ -102,6 +102,9 @@ try:
             artifact_path="model"
         )
         print(f"✅ Modelo registrado correctamente. MSE: {mse:.4f}")
+
+    with open("mlflow_run_id.txt", "w") as f:
+        f.write(run_id)
 
 except Exception as e:
     print(f"\n--- ERROR durante la ejecución de MLflow ---")
