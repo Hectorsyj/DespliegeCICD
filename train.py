@@ -115,6 +115,9 @@ try:
 model_dir = os.path.join(workspace_dir, "temp_model_artifact")
 # Definir explícitamente la ubicación base deseada para los artefactos del modelo
 model_loc = "file://" + os.path.abspath(model_dir)
+# --- Asegurar que el directorio MLRuns exista ---
+os.makedirs(model_dir, exist_ok=True)
+
 try:
     # Asegurar que el directorio de descarga esté limpio
     if os.path.exists(model_loc):
