@@ -5,15 +5,13 @@ import shutil
 import sys
 import traceback
 
-try:
-    RUN_IDenv = os.environ.get("MLFLOW_RUN_ID")
-    print(f'esta es la id del  Run de Wordflow {RUN_IDenv}')
-except Exception as e:
-    print(f"error con la variable MLFLOW_RUN_ID debido a {e}")
+
+RUN_ID = os.environ.get("MLFLOW_RUN_ID")
+print(f'esta es la id del  Run de Wordflow {RUN_ID}')
 
 TEMP_DOWNLOAD_PATH = os.environ.get("DOWNLOAD_PATH", "./temp_model_artifact")  # Debe coincidir con el 'path' del YAML
 
-if not RUN_IDenv:
+if not RUN_ID:
     print("Error: MLFLOW_RUN_ID no está definido. ¿Falló el paso 'get_run_id'?")
     sys.exit(1)
 
@@ -24,7 +22,7 @@ tracking_uri = "file://" + os.path.abspath(mlruns_dir)
 mlflow.set_tracking_uri(tracking_uri)
 
 # 2. 'model' es el artifact_path que usaste en log_model en train.py
-model_source_uri = f"runs:/{RUN_IDenv}/model" 
+model_source_uri = f"runs:/{RUN_ID}/model" 
 print(f"Descargando modelo de: {model_source_uri} a {TEMP_DOWNLOAD_PATH}")
 
 # 3. Descargar el artefacto

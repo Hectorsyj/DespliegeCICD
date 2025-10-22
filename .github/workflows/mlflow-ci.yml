@@ -40,9 +40,9 @@ jobs:
 
       - name: 📥 Descargar modelo de MLFlow (temporalmente)
         # Este script usa el RUN_ID para obtener el artefacto
-        run: make download_mlflow_model.py
+        run: python download_mlflow_model.py
         env:
-          MLFLOW_RUN_ID: $ {{ steps.get_run_id.outputs.RUN_ID }}
+          MLFLOW_RUN_ID: ${{ steps.get_run_id.outputs.RUN_ID }}
           # Asegúrate de configurar también MLFLOW_TRACKING_URI si es remoto
           DOWNLOAD_PATH: ./temp_model_artifact
 
