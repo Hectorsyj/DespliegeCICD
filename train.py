@@ -96,12 +96,12 @@ try:
 
         mlflow.log_metric("mse", mse)
         print(f"--- Debug: Intentando log_model con artifact_path='model' ---")
-        ejemplo_entrada = X_train.head(5)
+        ejemplo_entrada = X_train[:5]
 
         mlflow.sklearn.log_model(
             sk_model=model,
-            artifact_path="model"
-            #input_example=ejemplo_entrada
+            name="model",
+            input_example=ejemplo_entrada
         )
         print(f"✅ Modelo registrado correctamente. MSE: {mse:.4f}")
 
