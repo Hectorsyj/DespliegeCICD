@@ -100,8 +100,8 @@ try:
 
         mlflow.sklearn.log_model(
             sk_model=model,
-            artifact_path="model",
-            input_example=ejemplo_entrada
+            artifact_path="model"
+            #input_example=ejemplo_entrada
         )
         print(f"✅ Modelo registrado correctamente. MSE: {mse:.4f}")
 
