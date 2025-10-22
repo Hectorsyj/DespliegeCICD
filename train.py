@@ -9,6 +9,7 @@ import pandas as pd
 from mlflow.models import infer_signature
 import sys
 import traceback
+import shutil
 
 print(f"--- Debug: Initial CWD: {os.getcwd()} ---")
 
@@ -108,6 +109,20 @@ try:
     with open("mlflow_run_id.txt", "w") as f:
         f.write(run_id)
 
+# Descargar el artefacto
+TEMP_DOWNLOAD_PATH = "./temp_model_artifact"
+try:
+    # Asegurar que el directorio de descarga esté limpio
+    if os.path.exists(TEMP_DOWNLOAD_PATH):
+        shutil.rmtree(TEMP_DOWNLOAD_PATH)
+        
+    # Esta función de MLFlow copia el artefacto del run al path local.
+    mlflow.artifacts.download_artifacts(
+        artifact_uri=actual_artifact_uri,
+        dst_path=TEMP_DOWNLOAD_PATH
+    )
+    print(f"✅ Descarga completada. Archivos disponibles en {TEMP_DOWNLOAD_PATH}")
+    
 except Exception as e:
     print(f"\n--- ERROR durante la ejecución de MLflow ---")
     traceback.print_exc()

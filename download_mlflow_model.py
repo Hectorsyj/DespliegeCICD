@@ -4,6 +4,8 @@ import os
 import shutil
 
 RUN_IDenv = os.environ.get("MLFLOW_RUN_ID")
+print(f'esta es la id del Run de Wordflow {RUN_IDenv}')
+
 TEMP_DOWNLOAD_PATH = "./temp_model_artifact" # Debe coincidir con el 'path' del YAML
 
 if not RUN_ID:
