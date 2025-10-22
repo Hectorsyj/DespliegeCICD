@@ -108,27 +108,6 @@ try:
 
     with open("mlflow_run_id.txt", "w") as f:
         f.write(run_id)
-
-# Descargar el artefacto
-# --- Define Paths ---
-# Usar rutas absolutas dentro del workspace de la dir modelo
-model_dir = os.path.join(workspace_dir, "temp_model_artifact")
-# Definir explícitamente la ubicación base deseada para los artefactos del modelo
-model_loc = "file://" + os.path.abspath(model_dir)
-# --- Asegurar que el directorio MLRuns exista ---
-os.makedirs(model_dir, exist_ok=True)
-
-try:
-    # Asegurar que el directorio de descarga esté limpio
-    if os.path.exists(model_loc):
-        shutil.rmtree(model_loc)
-        
-    # Esta función de MLFlow copia el artefacto del run al path local.
-    mlflow.artifacts.download_artifacts(
-        artifact_uri=actual_artifact_uri,
-        dst_path=model_loc
-    )
-    print(f"✅ Descarga completada. Archivos disponibles en {model_loc}")
     
 except Exception as e:
     print(f"\n--- ERROR durante la ejecución de MLflow ---")

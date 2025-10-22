@@ -38,12 +38,13 @@ jobs:
       #  run: |
       #    echo "El ID de MLflow capturado es: $ {{ steps.get_run_id.outputs.RUN_ID }}"
 
-      #- name: 📥 Descargar modelo de MLFlow (temporalmente)
+      - name: 📥 Descargar modelo de MLFlow (temporalmente)
         # Este script usa el RUN_ID para obtener el artefacto
-      #  run: make download_mlflow_model.py
-      #  env:
-      #    MLFLOW_RUN_ID: $ {{ steps.get_run_id.outputs.RUN_ID }}
+        run: make download_mlflow_model.py
+        env:
+          MLFLOW_RUN_ID: $ {{ steps.get_run_id.outputs.RUN_ID }}
           # Asegúrate de configurar también MLFLOW_TRACKING_URI si es remoto
+          DOWNLOAD_PATH: ./temp_model_artifact
 
       - name: 📤 Subir modelo como artefacto (si pasa validación)
         if: success()
@@ -54,7 +55,7 @@ jobs:
           path: ./temp_model_artifact/
 
       #- name: 📤 Subir modelo como artefacto (si pasa validación)
-      #    f: success()
+      #    i f: success()
       #  uses: actions/upload-artifact@v4
       #  with:
       #     name: modelo-validado
