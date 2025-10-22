@@ -23,8 +23,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 print(f"--- Debug: Dimensiones de X_test: {X_test.shape} ---")  # Debería ser (n_samples, 10)
 
 # --- Cargar modelo previamente entrenado ---
-model_filename = "model.pkl"
-model_path = os.path.abspath(os.path.join(os.getcwd(), model_filename))
+#model_filename = "model.pkl"
+#model_path = os.path.abspath(os.path.join(os.getcwd(), model_filename))
 
 #________________________________________________________________
 # 1. Configurar MLFlow Tracking (debe apuntar al mismo lugar que el entrenamiento)
@@ -48,11 +48,12 @@ model_uri = f"runs:/{run_id}/model"
 print(f"--- Debug: Cargando modelo desde URI: {model_uri} ---")
 
 try:
-    # ⚠️ Esta es la línea que reemplaza tu lógica de os.path ⚠️
+    # se carga el modelo ya entrenado
     modelsk = mlflow.sklearn.load_model(model_uri) 
     
     print("✅ Modelo cargado correctamente.")
-#_____________________________________________________ hasta aca se asegura la ruta del modelo
+#_____________________________________________________ hasta aca se asegura la ruta y la carga del modelo
+
 #print(f"--- Debug: Intentando cargar modelo desde: {model_path} ---")
 #try:
 #    model = joblib.load(model_path)
